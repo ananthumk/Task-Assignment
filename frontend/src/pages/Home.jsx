@@ -120,13 +120,13 @@ export default function Home() {
       }
 
       fetchInsight()
-   }, [url, token, userRole]) // ← ADD userRole as dependency
+   }, [url, token, userRole]) 
 
    return (
       <div className="">
          <Navbar />
          <div className="w-full min-h-[90vh] flex flex-col py-6 gap-3 bg-neutral-100">
-            {/* ← CONDITIONALLY RENDER INSIGHT SECTION */}
+            
             {userRole !== 'admin' && (
                <div className="w-[85%] flex flex-col gap-3 mx-auto rounded bg-white py-3 px-4">
                   <div className="flex items-center gap-2">
