@@ -4,12 +4,13 @@ import taskLogo from '../assets/taskLogo.PNG'
 import { useNavigate } from 'react-router-dom'
 import { useContext } from 'react'
 import AppContext from '../context/AppContext'
+import axios from 'axios'
 
 export default function LoginForm() {
     const [errMsg, setErrMsg] = useState('')
     const [login, setLogin] = useState(true)
     const [userInfo, setUserInfo] = useState({
-        name: '', email: '', password: ''
+        name: '', email: '', password: '', role: 'user'
     })
     
     
@@ -42,28 +43,26 @@ export default function LoginForm() {
         const fetchData = async () => {
             try {
 
-                const urlString = `${url}/${login ? 'login' : 'register'}`
-                const options = {
-                    method: 'POST',
-                    body: JSON.stringify(userInfo),
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                }
-                const response = await fetch(urlString, options)
-                const data = await response.json()
-                if (response.ok) {
-                    updateToken(data.token)
-                    localStorage.setItem('token', data.token)
+                const urlString = `${url}/auth/${login ? 'login' : 'register'}`
+                const response = await axios.post( urlString, userInfo)
+                
+                if (response.status === 200 || response.status === 201) {
+                    updateToken(response.data.token)
+                    console.log(response)
+                    localStorage.setItem('token', response.data.token)
                     setUserInfo({ name: '', email: '', message: '' })
-                    navigate('/')
+                    console.log(response.data.user, response.data.user.role)
+                    if(response.data.user.role === 'admin'){
+                      navigate('/admin')
+                    }else{
+                    navigate('/')}
                 } else {
-                    console.log(data)
-                    setErrMsg(data.message)
+                    console.log(response)
+                    setErrMsg(response.data.message)
                 }
             }
             catch (error) {
-                console.log(data)
+                console.log(error)
                 setErrMsg(error.message)
             }
 
@@ -81,17 +80,31 @@ export default function LoginForm() {
                 <form onSubmit={submitForm} className='flex flex-col gap-3 min-w-[250px]'>
                     {!login && <div className='flex flex-col gap-1'>
                         <label className='text-sm text-gray-600'>Name</label>
-                        <input value={userInfo.name} name="name" onChange={handleInfo} type="text" className='py-2 px-4 text-sm text-gray-500 rounded-md border border-gray-500 outline-0' placeholder='Enter your full name' />
+                        <input value={userInfo.name} name="name" onChange={handleInfo} type="text" 
+                        className='py-2 px-4 text-sm text-gray-500 rounded-md border border-gray-500 outline-0' 
+                        placeholder='eg:Arun Jacob' />
                     </div>}
                     <div className='flex flex-col gap-1'>
                         <label className='text-sm text-gray-600'>Email</label>
-                        <input value={userInfo.email} name="email" onChange={handleInfo} type="email" className='py-2 px-4 text-sm text-gray-500 rounded-md border border-gray-500 outline-0' placeholder='Enter your Email ' />
+                        <input value={userInfo.email} name="email" onChange={handleInfo} type="email" 
+                        className='py-2 px-4 text-sm text-gray-500 rounded-md border border-gray-500 outline-0' 
+                        placeholder='eg: arunjacob@gmail.com' />
                     </div>
 
                     <div className='flex flex-col gap-1'>
                         <label className='text-sm text-gray-600'>Password</label>
-                        <input value={userInfo.password} name="password" onChange={handleInfo} type="password" className='py-2 px-4 text-sm text-gray-500 rounded-md border border-gray-500 outline-0' placeholder='Enter your password' />
+                        <input value={userInfo.password} name="password" onChange={handleInfo} type="password" 
+                        className='py-2 px-4 text-sm text-gray-500 rounded-md border border-gray-500 outline-0' 
+                        placeholder='eg: arunjacob' />
                     </div>
+                    {!login && <div className='flex flex-col gap-1'>
+                        <label className='text-sm text-gray-600'>Role</label>
+                        <select value={userInfo.role} name="role" onChange={handleInfo} 
+                        className='py-2 px-4 text-sm text-gray-500 rounded-md border border-gray-500 outline-0' >
+                            <option value="user" className='py-1 px-4 text-sm text-gray-500 rounded-md border border-gray-500 outline-0'>User</option>
+                            <option value="admin" className='py-1 px-4 text-sm text-gray-500 rounded-md border border-gray-500 outline-0'>Admin</option>
+                        </select>
+                    </div>}
                     <button type="submit" className='cursor-pointer rounded py-1 px-4 border-0 text-md outline-0 bg-blue-500 text-white font-medium'>
                         {buttonText}
                     </button>

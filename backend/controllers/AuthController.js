@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken'
 
 const register = async(req, res) => {
     try {
-        const {name, email, password} = req.body 
+        const {name, email, password, role} = req.body 
         
 
         if(!name || !email || !password){
@@ -17,10 +17,10 @@ const register = async(req, res) => {
         if(userExists) return res.status(401).json({message: 'User already exists'})
         
         const hashedPassword = await bcrypt.hash(password, 10)
-        const user = new User({name, email, password: hashedPassword})
+        const user = new User({name, email, password: hashedPassword, role})
         await user.save()
 
-        const token = jwt.sign({userId: user._id}, process.env.JWTKEY, {expiresIn: '24h'})
+        const token = jwt.sign({userId: user._id, role: user.role}, process.env.JWTKEY, {expiresIn: '24h'})
         return res.status(200).json({messsage: 'Successfully registered user', token: token, user: user})
     } catch (error) {
         console.log('Error on register user: ', error.message)
@@ -44,7 +44,7 @@ const login = async(req, res) => {
         const matchPassword = await bcrypt.compare(password, user.password)
         if(!matchPassword) return res.status(401).json({message: "Invalid Password"})
 
-        const token = jwt.sign({userId: user._id}, process.env.JWTKEY, {expiresIn: '24h'})
+        const token = jwt.sign({userId: user._id, role:user.role}, process.env.JWTKEY, {expiresIn: '24h'})
         return res.status(200).json({message: 'Login', user: user, token: token})
     } catch (error) {
         console.log('Error on login user: ', error.message)
@@ -52,4 +52,20 @@ const login = async(req, res) => {
     }
 }
 
-export {register, login}
+const getUser = async (req, res) => {
+    try {
+        const {id} = req.query 
+        
+        const user = await User.findOne({
+            _id: id
+        }, {email: 1, name: 1, id: 0})
+        
+        res.status(200).json(user)
+
+    } catch (error) {
+         console.log('Error on get user: ', error.message)
+        return res.status(500).json({message: 'Internal Server Error', error: error.message})
+    }
+}
+
+export {register, login, getUser}

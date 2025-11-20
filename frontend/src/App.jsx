@@ -8,6 +8,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import EditTask from './component/EditTask'
 import ProtectedRoute from './component/ProtectedRoute'
 import NotFound from './pages/NotFound'
+import AdminDashboard from './pages/AdminDashboard'
 
 function App() {
   const [token, setToken] = useState('')
@@ -25,8 +26,8 @@ function App() {
     }
   }
 
-  const url = 'https://thwork-assignment.onrender.com'
-  // const url = 'http://localhost:4000'
+ 
+  const url = 'http://localhost:4000'
   return (
    <AppContext.Provider value={{
     token: token, url: url, updateToken: updateToken
@@ -36,6 +37,7 @@ function App() {
         <Route path='/' element={<ProtectedRoute element={<Home />} />} />
         <Route path="/task" element={<ProtectedRoute element={<Task />} />} />
         <Route path='/edit/:id' element={<ProtectedRoute element={<EditTask />} />} />
+        <Route path='/admin' element={<ProtectedRoute element={<AdminDashboard />} />} />
         <Route path='/not-found' element={<NotFound />} />
         <Route path="*" element={<Navigate to="/not-found" replace />} />
       </Routes>

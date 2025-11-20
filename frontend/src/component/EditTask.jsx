@@ -1,10 +1,15 @@
 import { useContext, useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import AppContext from "../context/AppContext"
 import Navbar from "./Navbar"
 
 export default function EditTask(){
     const [data, setData] = useState(null)
+    
+    const location = useLocation()
+    const { task } = location.state || {}
+    console.log('props task: ', task)
+
     const [errMsg, setErrMsg] = useState('')
     const [successMsg,setSuccessMsg] = useState('')
     const {id} = useParams()
@@ -15,6 +20,11 @@ export default function EditTask(){
     useEffect(() => {
         const fetchData = async () => {
            if(!token) return 
+
+           if(task === data) {
+            setErrMsg('Nothing has to be updated')
+            return
+           }
            try {
               const urlString = `${url}/task/${id}`
               const options = {
@@ -90,11 +100,11 @@ export default function EditTask(){
                         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
                             <div className="flex flex-col gap-2">
                                 <label className="text-[13px] font-light">Task Title</label>
-                                <input required name="title" readOnly value={data?.title || ''} onChange={handleChanges} type="text" className="w-full text-[13px] py-3 px-6 border border-gray-300 rounded-md" placeholder="Enter task title" />
+                                <input required name="title"  value={data?.title || ''} onChange={handleChanges} type="text" className="w-full text-[13px] py-3 px-6 border border-gray-300 rounded-md" placeholder="Enter task title" />
                             </div>
                             <div className="flex flex-col gap-2">
                                 <label className="text-[13px] font-light">Description</label>
-                                <textarea name="description" readOnly value={data?.description || ''}  onChange={handleChanges} type="text" className="w-full text-[13px] py-2 px-6 min-h-[70px] border border-gray-300 rounded-md" placeholder="Enter task description" />
+                                <textarea name="description" value={data?.description || ''}  onChange={handleChanges} type="text" className="w-full text-[13px] py-2 px-6 min-h-[70px] border border-gray-300 rounded-md" placeholder="Enter task description" />
                             </div>
                             <div className="grid grid-cols-2 gap-5">
                                 <div className="flex flex-col gap-2">
@@ -108,19 +118,19 @@ export default function EditTask(){
                                 <div className="flex flex-col gap-2">
                                     <label className="text-[12px] font-light">Status</label>
                                     <select  name="status" value={data?.status || ''} onChange={handleChanges} className="p-2 text-[11px] order rounded border outline-0 border-gray-300">
-                                        <option className="p-2 text-[11px]" value="Open">OPEN</option>
+                                        <option className="p-2 text-[11px]" value="pending">PENDING</option>
                                         <option className="p-2 text-[11px]" value="In Progress">IN PROGRESS</option>
-                                        <option className="p-2 text-[11px]" value="Done">DONE</option>
+                                        <option className="p-2 text-[11px]" value="completed">COMPLETED</option>
                                     </select>
                                 </div>
-                                {/* <div className="flex flex-col gap-2">
+                                <div className="flex flex-col gap-2">
                                     <label className="text-[12px] font-light">Due Date</label>
-                                    <input readOnly value={data?.dueDate || ''} required name="dueDate" onChange={handleChanges} type="date" className="p-2 text-[11px] border rounded outline-0 border-gray-300" />
-                                </div> */}
+                                    <input value={data?.dueDate || ''} required name="dueDate" onChange={handleChanges} type="date" className="p-2 text-[11px] border rounded outline-0 border-gray-300" />
+                                </div>
                             </div>
                             <div className="grid grid-cols-2 min-h-[30px] gap-6">
                                 <button className="py-2 text-[13px] bg-blue-600 text-white cursor-pointer">
-                                     Create Task
+                                     Update Task
                                 </button>
                                 <button onClick={() => navigate('/')} className="py-2 text-[13px] text-gray-900 bg-gray-300  cursor-pointer">
                                      Cancel

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Task() {
     const [taskDetails, setTaskDetails] = useState({
-        title: '', description: '', priority: 'Low', status: 'Open', dueDate: ''
+        title: '', description: '', priority: 'Low', status: 'pending', dueDate: ''
     })
     const [errMsg, setErrMsg] = useState('')
     const [successMsg, setSuccessMsg] = useState('')
@@ -81,9 +81,9 @@ export default function Task() {
                         <div className="flex flex-col gap-2">
                             <label className="text-[12px] font-light">Status</label>
                             <select name="status" onChange={handleChanges} className="p-2 text-[11px] order rounded border outline-0 border-gray-300">
-                                <option className="p-2 text-[11px]" value="Open">OPEN</option>
+                                <option className="p-2 text-[11px]" value="pending">PENDING</option>
                                 <option className="p-2 text-[11px]" value="In Progress">IN PROGRESS</option>
-                                <option className="p-2 text-[11px]" value="Done">DONE</option>
+                                <option className="p-2 text-[11px]" value="completed">COMPLETED</option>
                             </select>
                         </div>
                         <div className="flex flex-col gap-2">
