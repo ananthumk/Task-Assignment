@@ -80,6 +80,7 @@ export default function LoginForm() {
                 <form onSubmit={submitForm} className='flex flex-col gap-3 min-w-[250px]'>
                     {!login && <div className='flex flex-col gap-1'>
                         <label className='text-sm text-gray-600'>Name</label>
+<<<<<<< HEAD
                         <input value={userInfo.name} name="name" onChange={handleInfo} type="text" 
                         className='py-2 px-4 text-sm text-gray-500 rounded-md border border-gray-500 outline-0' 
                         placeholder='eg:Arun Jacob' />
@@ -89,13 +90,27 @@ export default function LoginForm() {
                         <input value={userInfo.email} name="email" onChange={handleInfo} type="email" 
                         className='py-2 px-4 text-sm text-gray-500 rounded-md border border-gray-500 outline-0' 
                         placeholder='eg: arunjacob@gmail.com' />
+=======
+                        <input value={userInfo.name} name="name" onChange={handleInfo} type="text" className='py-2 px-4 text-sm text-gray-500 rounded-md border border-gray-500 outline-0' 
+                            placeholder='Eg: Arun Jacob' />
+                    </div>}
+                    <div className='flex flex-col gap-1'>
+                        <label className='text-sm text-gray-600'>Email</label>
+                        <input value={userInfo.email} name="email" onChange={handleInfo} type="email" className='py-2 px-4 text-sm text-gray-500 rounded-md border border-gray-500 outline-0' 
+                            placeholder='Eg: arunjacob@gmail.com ' />
+>>>>>>> 460bd9592cf4b06af2020a5a3729034a480d3f3b
                     </div>
 
                     <div className='flex flex-col gap-1'>
                         <label className='text-sm text-gray-600'>Password</label>
+<<<<<<< HEAD
                         <input value={userInfo.password} name="password" onChange={handleInfo} type="password" 
                         className='py-2 px-4 text-sm text-gray-500 rounded-md border border-gray-500 outline-0' 
                         placeholder='eg: arunjacob' />
+=======
+                        <input value={userInfo.password} name="password" onChange={handleInfo} type="password" className='py-2 px-4 text-sm text-gray-500 rounded-md border border-gray-500 outline-0' 
+                            placeholder='Eg: arunjacob' />
+>>>>>>> 460bd9592cf4b06af2020a5a3729034a480d3f3b
                     </div>
                     {!login && <div className='flex flex-col gap-1'>
                         <label className='text-sm text-gray-600'>Role</label>
